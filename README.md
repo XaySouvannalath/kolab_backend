@@ -2,6 +2,9 @@
 uvicorn main:app --reload
 
 
+#get all installed packages list
+-> python3 -m  pipreqs.pipreqs .
+
 
 
 
