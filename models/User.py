@@ -1,14 +1,15 @@
-from typing import Optional
+from typing import Union
 from pydantic import BaseModel
 from datetime import datetime
 
 class User(BaseModel):
-    id: Optional[int]
+    id: Union[int, None] = None
     username: str
-    first_name: Optional[str]
-    last_name: Optional[str]
+    first_name: Union[str, None] = None
+    last_name: Union[str, None] = None
     password: str
-    is_active: Optional[bool] = True
-    created_date: Optional[datetime]
-    created_by: Optional[str]
-    last_modified_date: Optional[datetime]
+    is_active: Union[bool, None] = True
+    created_date: Union[datetime, None] = None
+    created_by: Union[str, None] = None
+    last_modified_date: Union[datetime, None] = None
+    user_role_id: Union[int, None] = None

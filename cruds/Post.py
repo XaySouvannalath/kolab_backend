@@ -25,11 +25,14 @@ async def create_post(post: Post):
 async def update_post(post_id: int, post: Post):
     query = """
     UPDATE posts
-    SET name = :name, description = :description, created_by = :created_by,
-        last_modified_date = :last_modified_date
+    SET name = :name, description = :description
     WHERE id = :id
     """
-    values = {**post.dict(), "id": post_id}
+    values = {
+        "name": post.name,
+        "description": post.description,
+        "id": post_id
+        }
     await database.execute(query=query, values=values)
 
 async def delete_post(post_id: int):

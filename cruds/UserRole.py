@@ -33,11 +33,14 @@ async def create_user_role(user_role: UserRole):
 async def update_user_role(user_role_id: int, user_role: UserRole):
     query = """
     UPDATE `user_role`
-    SET role = :role, description = :description, created_by = :created_by, 
-        last_modified_date = :last_modified_date
+    SET role = :role, description = :description
     WHERE id = :id
     """
-    values = {**user_role.dict(), "id": user_role_id}
+    values = {
+        "role": user_role.role,
+        "description": user_role.description, 
+        "id": user_role_id
+        }
     await database.execute(query=query, values=values)
 
 async def delete_user_role(user_role_id: int):

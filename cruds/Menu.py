@@ -26,11 +26,14 @@ async def create_menu(menu: Menu):
 async def update_menu(menu_id: int, menu: Menu):
     query = """
     UPDATE menu
-    SET menu = :menu, route = :route, description = :description, created_by = :created_by,
-        last_modified_date = :last_modified_date
+    SET menu = :menu, route = :route, description = :description
     WHERE id = :id
     """
-    values = {**menu.dict(), "id": menu_id}
+    values = {
+        "menu": menu.menu,
+        "route": menu.route,
+        "description": menu.description,
+        "id": menu_id}
     await database.execute(query=query, values=values)
 
 async def delete_menu(menu_id: int):

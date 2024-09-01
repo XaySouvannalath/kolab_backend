@@ -27,11 +27,15 @@ async def update_social_platform(platform_id: int, platform: SocialPlatform):
     query = """
     UPDATE social_platform
     SET platform_name = :platform_name, is_default = :is_default, 
-        logo_image = :logo_image, created_by = :created_by, 
-        last_modified_date = :last_modified_date
+        logo_image = :logo_image
     WHERE id = :id
     """
-    values = {**platform.dict(), "id": platform_id}
+    values = {
+        "platform_name": platform.platform_name,
+        "is_default": platform.is_default,
+        "logo_image": platform.logo_image,
+         "id": platform_id
+         }
     await database.execute(query=query, values=values)
 
 async def delete_social_platform(platform_id: int):

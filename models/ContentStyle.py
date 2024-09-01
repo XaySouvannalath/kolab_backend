@@ -1,11 +1,11 @@
-from typing import Optional
+from typing import Optional, Union
 from pydantic import BaseModel
 from datetime import datetime
 
 class ContentStyle(BaseModel):
     id: Optional[int]
     name: Optional[str]
-    description: Optional[str]
-    created_date: Optional[datetime]
-    created_by: Optional[str]
-    last_modified_date: Optional[datetime]
+    description: Union[str, None] = None
+    created_date:  Union[datetime, None] = None
+    created_by:  Union[str, None] = None
+    last_modified_date:  Union[datetime, None] = None

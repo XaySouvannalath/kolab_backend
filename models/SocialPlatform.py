@@ -1,12 +1,12 @@
-from typing import Optional
+from typing import Union
 from pydantic import BaseModel
 from datetime import datetime
 
 class SocialPlatform(BaseModel):
-    id: Optional[int]
-    platform_name: Optional[str]
-    is_default: Optional[bool]
-    logo_image: Optional[str]
-    created_date: Optional[datetime]
-    created_by: Optional[str]
-    last_modified_date: Optional[datetime]
+    id: Union[int, None] = None
+    platform_name: Union[str, None]  = None
+    is_default: Union[bool, None]  = None
+    logo_image: Union[str, None]  = None
+    created_date: Union[datetime, None]  = None
+    created_by: Union[str, None]  = None
+    last_modified_date: Union[datetime, None]  = None

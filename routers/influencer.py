@@ -2,6 +2,10 @@ from typing import Union
 from fastapi import APIRouter, HTTPException
 from models.Influencer import Influencer
 from cruds.influencer import *
+from models.InfluencerSearchCondition import InfluencerSearchCondition
+from fastapi import Depends
+
+
 
 router = APIRouter(
     prefix="/influencer"
@@ -19,6 +23,18 @@ async def get(id: Union[str, None] = None):
         if result is None:
             raise HTTPException(status_code=404, detail="Influencers not found")
     return result
+
+
+@router.post("/search", tags=["influencer"])
+# async def search(conditions: InfluencerSearchCondition = Depends()):
+async def search(conditions: InfluencerSearchCondition):
+    result = {}
+    result = await search_influencer(conditions=conditions)
+    if result is None:
+            raise HTTPException(status_code=404, detail="Influencers not found")
+    return result
+
+    
 
 @router.post("/", tags=["influencer"])
 async def create(influencer: Influencer):

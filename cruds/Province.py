@@ -2,7 +2,7 @@ from config.database import database
 from models.Province import Province
 
 async def get_all_provinces():
-    query = "SELECT * FROM province"
+    query = "SELECT * FROM province order by row_order asc"
     result = await database.fetch_all(query=query)
     return result
 
@@ -12,24 +12,25 @@ async def get_province(province_id: int):
 
 async def create_province(province: Province):
     query = """
-    INSERT INTO province (name, description, created_by)
-    VALUES (:name, :description, :created_by)
+    INSERT INTO province (name, description)
+    VALUES (:name, :description)
     """
     values = {
         "name": province.name,
-        "description": province.description,
-        "created_by": province.created_by,
+        "description": province.description
     }
     await database.execute(query=query, values=values)
 
 async def update_province(province_id: int, province: Province):
     query = """
     UPDATE province
-    SET name = :name, description = :description, created_by = :created_by,
-        last_modified_date = :last_modified_date
+    SET name = :name, description = :description
     WHERE id = :id
     """
-    values = {**province.dict(), "id": province_id}
+    values = {
+        "nane": province.name,
+        "description": province.description
+        , "id": province_id}
     await database.execute(query=query, values=values)
 
 async def delete_province(province_id: int):

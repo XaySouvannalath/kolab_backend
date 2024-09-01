@@ -14,16 +14,14 @@ async def get_follower_log(follower_log_id: int):
 
 async def create_follower_log(follower_log: FollowerLog):
     query = """
-    INSERT INTO follower_logs (influencer_id, platform_id, profile_url, num_of_follower, as_of_date, created_by)
-    VALUES (:influencer_id, :platform_id, :profile_url, :num_of_follower, :as_of_date, :created_by)
+    INSERT INTO follower_logs (influencer_id, platform_id, num_of_follower)
+    VALUES (:influencer_id, :platform_id, :num_of_follower)
     """
     values = {
         "influencer_id": follower_log.influencer_id,
         "platform_id": follower_log.platform_id,
-        "profile_url": follower_log.profile_url,
         "num_of_follower": follower_log.num_of_follower,
-        "as_of_date": follower_log.as_of_date,
-        "created_by": follower_log.created_by,
+
     }
     await database.execute(query=query, values=values)
 

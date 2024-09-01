@@ -25,11 +25,13 @@ async def create_power(power: Power):
 async def update_power(power_id: int, power: Power):
     query = """
     UPDATE power
-    SET power = :power, description = :description, created_by = :created_by,
-        last_modified_date = :last_modified_date
+    SET power = :power, description = :description
     WHERE id = :id
     """
-    values = {**power.dict(), "id": power_id}
+    values = {
+        "power": power.power,
+        "description": power.description
+        , "id": power_id}
     await database.execute(query=query, values=values)
 
 async def delete_power(power_id: int):

@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from config.db import db_config
 from config.database import database
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
 #import router
 from routers import agency
 from routers import utilities
@@ -26,7 +29,9 @@ from routers import RoleMenu
 from routers import SocialPlatform
 from routers import User
 from routers import UserRole
-
+from routers import FileUpload
+from routers import InfluencerRating
+from routers import InfluencerSocialAccount
 
 app = FastAPI()
 
@@ -53,7 +58,24 @@ app.include_router(RoleMenu.router)
 app.include_router(SocialPlatform.router)
 app.include_router(User.router)
 app.include_router(UserRole.router)
+app.include_router(FileUpload.router)
+app.include_router(InfluencerRating.router)
+app.include_router(InfluencerSocialAccount.router)
 
+origins = [
+    "http://localhost:5173",
+    "*"
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    # allow_origins=origins,
+    allow_origins=["*"], # allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.on_event("startup")
 async def startup():
     await database.connect()

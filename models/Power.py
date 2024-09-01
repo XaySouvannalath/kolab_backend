@@ -1,11 +1,11 @@
-from typing import Optional
+from typing import Union
 from pydantic import BaseModel
 from datetime import datetime
 
 class Power(BaseModel):
-    id: Optional[int]
-    power: Optional[str]
-    description: Optional[str]
-    created_date: Optional[datetime]
-    created_by: Optional[str]
-    last_modified_date: Optional[datetime]
+    id: Union[int, None] = None
+    power: Union[str, None] = None
+    description: Union[str, None] = None
+    created_date: Union[datetime, None] = None
+    created_by: Union[str, None] = None
+    last_modified_date: Union[datetime, None] = None

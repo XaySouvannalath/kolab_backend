@@ -12,11 +12,12 @@ async def get_tag(tag_id: int):
 
 async def create_tag(tag: Tag):
     query = """
-    INSERT INTO tag (tag, description, created_by)
-    VALUES (:tag, :description, :created_by)
+    INSERT INTO tag (tag, color,description, created_by)
+    VALUES (:tag,:color, :description, :created_by)
     """
     values = {
         "tag": tag.tag,
+        "color": tag.color,
         "description": tag.description,
         "created_by": tag.created_by,
     }
@@ -25,11 +26,14 @@ async def create_tag(tag: Tag):
 async def update_tag(tag_id: int, tag: Tag):
     query = """
     UPDATE tag
-    SET tag = :tag, description = :description, created_by = :created_by,
-        last_modified_date = :last_modified_date
-    WHERE id = :id
+    SET tag = :tag, color =:color, description = :description WHERE id = :id
     """
-    values = {**tag.dict(), "id": tag_id}
+    values = {
+        "tag": tag.tag,
+        "color": tag.color,
+        "description": tag.description,
+        "id": tag_id
+    }
     await database.execute(query=query, values=values)
 
 async def delete_tag(tag_id: int):
