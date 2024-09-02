@@ -23,16 +23,14 @@ async def get_agency_one(id):
 async def create_agency(agency: Agency):
     print("Create agency")
     query = """
-    INSERT INTO agency (agency_name, telephone, email, address, created_date, created_by)
-    VALUES (:agency_name, :telephone, :email, :address, :created_date, :created_by)
+    INSERT INTO agency (agency_name, telephone, email, address)
+    VALUES (:agency_name, :telephone, :email, :address)
     """
     values = {
         "agency_name": agency.agency_name,
         "telephone": agency.telephone,
         "email": agency.email,
-        "address": agency.address,
-        "created_date": agency.created_date,
-        "created_by": agency.created_by,
+        "address": agency.address
     }
     await database.execute(query=query, values=values)
     
@@ -47,11 +45,16 @@ async def get_agency(agency_id: int):
 async def update_agency(agency_id: int, agency: Agency):
     query = """
     UPDATE agency
-    SET agency_name = :agency_name, telephone = :telephone, email = :email, address = :address,
-        created_date = :created_date, created_by = :created_by, last_modified_date = :last_modified_date
+    SET agency_name = :agency_name, telephone = :telephone, email = :email, address = :address
+        
     WHERE id = :id
     """
-    values = {**agency.dict(), "id": agency_id}
+    values = {
+        "agency_name": agency.agency_name,
+        "telephone": agency.telephone,
+        "email": agency.email,
+        "address": agency.address
+        , "id": agency_id}
     await database.execute(query=query, values=values)
 
 async def delete_agency(agency_id: int):

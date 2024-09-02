@@ -7,14 +7,14 @@ from datetime import datetime
  
 
 class Agency(BaseModel):
-    id: Union[int, None]
+    id: Union[int, None] = None
     agency_name: str
     telephone: Union[str, None]
     email: Union[str, None]
     address: Union[str, None]
-    created_date: Union[datetime, None]
-    created_by: Union[str, None]
-    last_modified_date: Union[datetime, None]
+    created_date: Union[datetime, None] = None
+    created_by: Union[str, None] = None
+    last_modified_date: Union[datetime, None] = None
 
 
 class Item(BaseModel):
