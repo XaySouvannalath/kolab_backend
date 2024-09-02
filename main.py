@@ -87,9 +87,7 @@ async def shutdown():
 @app.get("/")
 async def root():
     return {
-        "message": "Hello World",
-        "dbname": db_config.some_global_value,
-        "db_config": db_config
+        "message": "Hello World"
         }
 
 
