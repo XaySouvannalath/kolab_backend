@@ -4,15 +4,17 @@ from typing import Union
 
 from datetime import datetime
 
+ 
+
 class Agency(BaseModel):
-    id: Optional[int]
+    id: Union[int, None]
     agency_name: str
-    telephone: Optional[str]
-    email: Optional[str]
-    address: Optional[str]
-    created_date: Optional[datetime]
-    created_by: Optional[str]
-    last_modified_date: Optional[datetime]
+    telephone: Union[str, None]
+    email: Union[str, None]
+    address: Union[str, None]
+    created_date: Union[datetime, None]
+    created_by: Union[str, None]
+    last_modified_date: Union[datetime, None]
 
 
 class Item(BaseModel):

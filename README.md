@@ -4,15 +4,21 @@ uvicorn main:app --reload
 # How to run the project in real server
  -> my-venv/bin/fastapi run main.py
 
+ ->uvicorn main:app --host 0.0.0.0 --port 8080 --workers 4
+
+
 
 #get all installed packages list
 -> python3 -m  pipreqs.pipreqs .
 
 # HOw to install package from requirements.txt file
+->my-venv/bin/pip install -r reqiurements.txt
 
 
 
-
+# run in server using PM2
+pm2 start "gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app" --name hello_world
+pm2 start "my-venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 --workers 3" --name kolab_backend -i 3
 
 view-source:https://www.facebook.com/MrBeast6000
 
@@ -55,3 +61,4 @@ get follower log by: influencer_id, from_date to_date
   245  fastapi run main.py
   246  my-venv/bin/fastapi run main.py
   247  cd /var/server
+
