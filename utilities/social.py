@@ -1,4 +1,5 @@
 
+from config.database import database
 
 from fastapi import HTTPException
 import requests
@@ -137,6 +138,16 @@ def get_youtube_followers(username):
     
     
 
+
+async def get_influencer_data_last_update_time(influencer_id: int):
+
+    query = """
+    call sp_get_influ_last_update_time(:influencer_id);
+    """
+    
+    result = await database.fetch_all(query=query,values={"influencer_id": influencer_id})
+    return result
+       
 
 
 

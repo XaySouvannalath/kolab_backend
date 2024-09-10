@@ -24,3 +24,9 @@ async def get_facebook_timeline():
 @router.get("/GetYoutubeFollower", tags=["utilities"])
 async def get_youtube_follower(username):
     return get_youtube_followers(username=username)
+
+
+@router.get("/InfluencerDataLastUpdateTime", tags=["utilities"])
+async def getInfluencerDataLastUpdateTime(influencer_id: int):
+    # return "okk"
+    return get_influencer_data_last_update_time(influencer_id=influencer_id)
