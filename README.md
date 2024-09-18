@@ -4,7 +4,7 @@ uvicorn main:app --reload
 # How to run the project in real server
  -> myenv/bin/fastapi run main.py
 
- ->uvicorn main:app --host 0.0.0.0 --port 8080 --workers 4
+ ->uvicorn main:app --host 0.0.0.0 --port 8000 --workers 2
 
 
 
@@ -14,6 +14,9 @@ uvicorn main:app --reload
 # HOw to install package from requirements.txt file
 ->myenv/bin/pip install -r reqiurements.txt
 
+
+# create session:
+tmux new -s <session-name>
 
 # resume session
 -> tmux attach -t mysession
