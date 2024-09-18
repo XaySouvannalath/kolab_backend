@@ -177,7 +177,7 @@ async def search_influencer(conditions: InfluencerSearchCondition):
          )
         """
     
-    # print(query)
+    print(query)
     result = await database.fetch_all(query=query)
     
     influencer_response = []

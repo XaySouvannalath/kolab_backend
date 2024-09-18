@@ -3,8 +3,11 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta
 from cruds.Auth import *
 from typing import Union
+from fastapi.responses import JSONResponse
 
+from models.Auth import LoginModel
 from models.User import PasswordReset
+import json
 
 router = APIRouter(
     tags=["Auth"]
@@ -13,13 +16,21 @@ router = APIRouter(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 @router.post("/login")
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login(form_data: LoginModel):
     user = await authenticate_user(form_data.username, form_data.password)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
+        # raise HTTPException(
+        #     status_code=status.HTTP_401_UNAUTHORIZED,
+        #     detail="Incorrect username or password",
+        #     headers={"WWW-Authenticate": "Bearer"},
+        # )
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "success": False,
+                "message": "Incorrect username or password",
+                
+            }
         )
     
     access_token_expires = timedelta(minutes=30)
@@ -27,7 +38,17 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         data={"sub": user.username, "id": user.id}, expires_delta=access_token_expires
     )
     
-    return {"access_token": access_token, "token_type": "bearer"}
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "success": True,
+            "access_token": access_token, 
+            "token_type": "bearer",
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "menu": None
+             
+        })
 
 
 @router.get("/logout")

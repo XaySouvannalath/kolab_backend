@@ -8,7 +8,7 @@ from typing import Optional
 
 SECRET_KEY = "kolab2024"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 20
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # Verify token
 def verify_token(token: str):
@@ -16,9 +16,11 @@ def verify_token(token: str):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
     except jwt.ExpiredSignatureError:
-        raise jwt.ExpiredSignatureError("Token has expired")
+        # raise jwt.ExpiredSignatureError("Token has expired")
+        return False
     except jwt.InvalidTokenError:
-        raise jwt.InvalidTokenError("Invalid token")
+        # raise jwt.InvalidTokenError("Invalid token")
+        return False
 
 def get_password_hash(password: str):
     """Hash the password using MD5"""
@@ -33,8 +35,8 @@ async def authenticate_user(username: str, password: str) -> Optional[User]:
     if not user:
         return None
     
-    print(user["password"])
-    print(password)
+    # print(user["password"])
+    # print(password)
     if user["password"] == password:
         return User(**user)
     
