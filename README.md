@@ -1,20 +1,34 @@
-# How to run the project:
-uvicorn main:app --reload
+# 1. How to run the project in dev mode:
+>uvicorn main:app --reload
 
-# How to run the project in real server
- -> myenv/bin/fastapi run main.py
+# 2. How to run the project in real server
+ >myenv/bin/fastapi run main.py
+or
+ >uvicorn main:app --host 0.0.0.0 --port 8000 --workers 2
 
- ->uvicorn main:app --host 0.0.0.0 --port 8000 --workers 2
+# 3. Run the backend project using service:
+> systmctl start fastapi
+# 4. Restart backed
+> systemctl restart fastapi
+# 5. Stop backend
+> systemctl stop fastapi
+
+
+# 6. check service
+> journalctl -u fastapi
+# 7. check service log in real-time
+> journalctl -u fastapi -f
 
 
 
-#get all installed packages list
--> python3 -m  pipreqs.pipreqs . --force
+# get all installed packages list
+>python3 -m  pipreqs.pipreqs . --force
 
-# HOw to install package from requirements.txt file
-->myenv/bin/pip install -r requirements.txt
+# Install packages from requirements.txt file
+>myenv/bin/pip install -r requirements.txt
 
 
+# for running fastapi server in terminal and keep it remain running, we us "tmux"
 # create session:
 tmux new -s <session-name>
 
@@ -23,7 +37,11 @@ tmux new -s <session-name>
 
 
 
-# run in server using PM2
+
+
+
+
+# run in server using PM2 (this way will slow the server!!!)
 pm2 start "gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app" --name hello_world
 pm2 start "myenv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 --workers 3" --name kolab_backend -i 3
 
@@ -48,10 +66,8 @@ get follower log by: influencer_id, from_date to_date
 
 
 
-# set up server
-1. mysql
-2. nginx
-3. firewall 
+
+
 
 
 
