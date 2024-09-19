@@ -31,10 +31,10 @@ async def create_influencer(influencer: Influencer):
     query = """
     INSERT INTO influencer (channel_name, content_style_id, is_available, first_name, last_name, nick_name, remark, 
                             date_of_birth, has_agency, created_by, gender, agency_id, photo, province_id,
-                            birth_place, impression, reach, engagement)
+                            birth_place, impression, reach, engagement, photo2, photo3)
     VALUES (:channel_name, :content_style_id, :is_available, :first_name, :last_name, :nick_name, :remark, 
             :date_of_birth, :has_agency, :created_by, :gender, :agency_id, :photo, :province_id,
-            :birth_place, :impression, :reach, :engagement
+            :birth_place, :impression, :reach, :engagement, :photo2,:photo3
             
             )
     """
@@ -56,7 +56,9 @@ async def create_influencer(influencer: Influencer):
         "birth_place": influencer.birth_place,
         "impression": influencer.impression,
         "reach": influencer.reach,
-        "engagement": influencer.engagement
+        "engagement": influencer.engagement,
+        "photo2": influencer.photo2,
+        "photo3": influencer.photo3,
     }
     await database.execute(query=query, values=values)
 
@@ -67,7 +69,8 @@ async def update_influencer(influencer_id: int, influencer: Influencer):
         first_name = :first_name, last_name = :last_name, nick_name = :nick_name, remark = :remark,
         date_of_birth = :date_of_birth, has_agency = :has_agency, gender = :gender, agency_id = :agency_id, 
         photo = :photo, province_id = :province_id, birth_place = :birth_place,
-        impression = :impression, reach = :reach, engagement = :engagement
+        impression = :impression, reach = :reach, engagement = :engagement,
+        photo2 = :photo2, photo3 = :photo3
     WHERE id = :id
     """
     values = {
@@ -88,6 +91,8 @@ async def update_influencer(influencer_id: int, influencer: Influencer):
         "impression": influencer.impression,
         "reach": influencer.reach,
         "engagement": influencer.engagement,
+        "photo2": influencer.photo2,
+        "photo3": influencer.photo3,
         "id": influencer_id
     }
     await database.execute(query=query, values=values)
@@ -235,7 +240,9 @@ async def search_influencer(conditions: InfluencerSearchCondition):
                     reach=r['reach'],
                     engagement=r['engagement'],
                     tags=tag_models,
-                    social_accounts=sa_models
+                    social_accounts=sa_models,
+                    photo2= r['photo2'],
+                    photo3= r['photo3'],
                 ) 
             )
         

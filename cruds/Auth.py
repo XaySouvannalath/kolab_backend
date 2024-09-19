@@ -2,6 +2,8 @@ import hashlib
 import jwt
 from fastapi import HTTPException
 from datetime import datetime, timedelta
+from fastapi.responses import JSONResponse
+
 from models.User import User
 from config.database import database  # Assume you have a database connection set up
 from typing import Optional
@@ -74,7 +76,7 @@ async def reset_password(username: str, new_password: str):
     user = await database.fetch_one(query=query, values={"username": username})
 
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+            return JSONResponse(status_code=200, content={"success": False, "message": "User not found"})
 
     # Update the password
     update_query = """
@@ -82,6 +84,9 @@ async def reset_password(username: str, new_password: str):
         SET password = :password, last_modified_date = NOW() 
         WHERE username = :username
     """
-    await database.execute(query=update_query, values={"password": new_password, "username": username})
+    result = await database.execute(query=update_query, values={"password": new_password, "username": username})
 
-    return {"message": "Password updated successfully"}
+    if result:  # If the execute was successful
+        return JSONResponse(status_code=200, content={"success": True, "message": "Password updated successfully"})
+    else:
+        return JSONResponse(status_code=500, content={"success": False, "message": "Failed to update password"})

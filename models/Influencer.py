@@ -32,4 +32,6 @@ class Influencer(BaseModel):
     reach: Union[int, None] = None 
     engagement: Union[int, None] = None
     social_accounts: List[InfluencerSocialAccount] = None
+    photo2: Union[str, None] = None
+    photo3: Union[str, None] = None
     

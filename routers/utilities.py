@@ -1,7 +1,10 @@
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException,status
 from utilities.social import *
+from fastapi.responses import JSONResponse
 from utilities.apify import *
+
+ 
 
 router = APIRouter(
     prefix="/utilities"
@@ -29,4 +32,11 @@ async def get_youtube_follower(username):
 @router.get("/InfluencerDataLastUpdateTime", tags=["utilities"])
 async def getInfluencerDataLastUpdateTime(influencer_id: int):
     # return "okk"
-    return get_influencer_data_last_update_time(influencer_id=influencer_id)
+    result = await get_influencer_data_last_update_time(influencer_id=influencer_id)
+    result_dict = None
+    for r in result:
+        result_dict = dict(r)
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=result_dict
+    )

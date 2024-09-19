@@ -19,8 +19,8 @@ async def get_user(user_id: int):
 
 async def create_user(user: User):
     query = """
-    INSERT INTO `user` (username, first_name, last_name, password, is_active, created_by, user_role_id)
-    VALUES (:username, :first_name, :last_name, :password, :is_active, :created_by, :user_role_id)
+    INSERT INTO `user` (username, first_name, last_name, password, is_active, user_role_id)
+    VALUES (:username, :first_name, :last_name, :password, :is_active, :user_role_id)
     """
     values = {
         "username": user.username,
@@ -28,7 +28,6 @@ async def create_user(user: User):
         "last_name": user.last_name,
         "password": user.password,
         "is_active": user.is_active,
-        "created_by": user.created_by,
         "user_role_id": user.user_role_id
     }
     await database.execute(query=query, values=values)

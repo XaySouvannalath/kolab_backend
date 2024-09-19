@@ -12,7 +12,7 @@ uvicorn main:app --reload
 -> python3 -m  pipreqs.pipreqs . --force
 
 # HOw to install package from requirements.txt file
-->myenv/bin/pip install -r reqiurements.txt
+->myenv/bin/pip install -r requirements.txt
 
 
 # create session:

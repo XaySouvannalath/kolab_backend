@@ -133,7 +133,7 @@ async def check_token_middleware(request: Request, call_next):
                 "detail": "Authorization header missing"})
         else:
             token = authorization.split(" ")[1] if " " in authorization else None
-            print(token)
+            # print(token)
             # return response
             if token is None:
                 return JSONResponse(status_code=401, content={
@@ -151,7 +151,7 @@ async def check_token_middleware(request: Request, call_next):
                     if payload == False:
                         return JSONResponse(status_code=401, content={"success": False,"message": "Token has expired"})
                     else:
-                        response = await call_next(request)
+                      
                         return response
                 except Exception as e:
                     print(f"Token verification failed: {str(e)}")
@@ -159,7 +159,7 @@ async def check_token_middleware(request: Request, call_next):
 
     
 
-
+ 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins
