@@ -23,6 +23,7 @@ async def create_follower_log(follower_log: FollowerLog):
         "num_of_follower": follower_log.num_of_follower,
 
     }
+    print("hello world")
     await database.execute(query=query, values=values)
 
 async def update_follower_log(follower_log_id: int, follower_log: FollowerLog):

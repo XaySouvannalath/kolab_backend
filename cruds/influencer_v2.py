@@ -7,101 +7,12 @@ from cruds.InfluencerSocialAccount import *
 from models.InfluencerSocialAccount import InfluencerSocialAccount
 from models.InfluencerTagResponse import InfluencerTagModel
 
-async def get_all_influencers():
+async def influencer_page():
     query = """
-    
-    select a.* , b.name as content_style, c.name as province_name, c.description as province_description,
-    d.agency_name as agency_name, e.description as birth_place_description
-    
-    from influencer a 
-    inner join content_style b on b.id = a.content_style_id
-    left join province c on c.id = a.province_id
-    left join agency d on d.id = a.agency_id
-    
-    left join province e on e.id = a.birth_place
+    select (ceil((select count(*) from influencer)/10)) as pages;
     """
-    result = await database.fetch_all(query=query)
-    return result
-
-async def get_influencer(influencer_id: int):
-    query = "SELECT * FROM influencer WHERE id = :id"
-    return await database.fetch_one(query=query, values={"id": influencer_id})
-
-async def create_influencer(influencer: Influencer):
-    query = """
-    INSERT INTO influencer (channel_name, content_style_id, is_available, first_name, last_name, nick_name, remark, 
-                            date_of_birth, has_agency, created_by, gender, agency_id, photo, province_id,
-                            birth_place, impression, reach, engagement, photo2, photo3)
-    VALUES (:channel_name, :content_style_id, :is_available, :first_name, :last_name, :nick_name, :remark, 
-            :date_of_birth, :has_agency, :created_by, :gender, :agency_id, :photo, :province_id,
-            :birth_place, :impression, :reach, :engagement, :photo2,:photo3
-            
-            )
-    """
-    values = {
-        "channel_name": influencer.channel_name,
-        "content_style_id": influencer.content_style_id,
-        "is_available": influencer.is_available,
-        "first_name": influencer.first_name,
-        "last_name": influencer.last_name,
-        "nick_name": influencer.nick_name,
-        "remark": influencer.remark,
-        "date_of_birth": influencer.date_of_birth,
-        "has_agency": influencer.has_agency,
-        "created_by": influencer.created_by,
-        "gender": influencer.gender,
-        "agency_id": influencer.agency_id,
-        "photo": influencer.photo,
-        "province_id": influencer.province_id,
-        "birth_place": influencer.birth_place,
-        "impression": influencer.impression,
-        "reach": influencer.reach,
-        "engagement": influencer.engagement,
-        "photo2": influencer.photo2,
-        "photo3": influencer.photo3,
-    }
-    await database.execute(query=query, values=values)
-
-async def update_influencer(influencer_id: int, influencer: Influencer):
-    query = """
-    UPDATE influencer
-    SET channel_name = :channel_name, content_style_id = :content_style_id, is_available = :is_available, 
-        first_name = :first_name, last_name = :last_name, nick_name = :nick_name, remark = :remark,
-        date_of_birth = :date_of_birth, has_agency = :has_agency, gender = :gender, agency_id = :agency_id, 
-        photo = :photo, province_id = :province_id, birth_place = :birth_place,
-        impression = :impression, reach = :reach, engagement = :engagement,
-        photo2 = :photo2, photo3 = :photo3
-    WHERE id = :id
-    """
-    values = {
-        "channel_name": influencer.channel_name,
-        "content_style_id": influencer.content_style_id,
-        "is_available": influencer.is_available,
-        "first_name": influencer.first_name,
-        "last_name": influencer.last_name,
-        "nick_name": influencer.nick_name,
-        "remark": influencer.remark,
-        "date_of_birth": influencer.date_of_birth,
-        "has_agency": influencer.has_agency,
-        "gender": influencer.gender,
-        "agency_id": influencer.agency_id,
-        "photo": influencer.photo,
-        "province_id": influencer.province_id,
-        "birth_place": influencer.birth_place,
-        "impression": influencer.impression,
-        "reach": influencer.reach,
-        "engagement": influencer.engagement,
-        "photo2": influencer.photo2,
-        "photo3": influencer.photo3,
-        "id": influencer_id
-    }
-    await database.execute(query=query, values=values)
-
-
-async def delete_influencer(influencer_id: int):
-    query = "DELETE FROM influencer WHERE id = :id"
-    await database.execute(query=query, values={"id": influencer_id})
-
+    result = await database.fetch_all(query= query)
+    return result[0]
 
 
 async def search_influencer(conditions: InfluencerSearchCondition):
@@ -121,19 +32,7 @@ async def search_influencer(conditions: InfluencerSearchCondition):
    # Append conditions if they are not None
     if conditions.id is not None:
         query += f" AND a.id = {conditions.id}"
-    # if conditions.channel_name:
-    #     query += f" AND a.channel_name LIKE '%{conditions.channel_name}%'"
-    # if conditions.first_name:
-    #     query += f" AND a.first_name LIKE '%{conditions.first_name}%'"
-    # if conditions.last_name:
-    #     query += f" AND a.last_name LIKE '%{conditions.last_name}%'"
-    # if conditions.province_id is not None:
-    #     query += f" AND a.province_id = {conditions.province_id}"
-    # if conditions.content_style_id is not None:
-    #     query += f" AND a.content_style_id = {conditions.content_style_id}"
-        
-    # version 2
-    # Check for keyword condition
+    
     if conditions.keyword:
         keyword = f"%{conditions.keyword}%"  # Wildcard search
         query += f"""

@@ -19,6 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import agency
 from routers import utilities
 from routers import influencer
+from routers import influencer_v2
 from routers import AgencyInfluencer
 from routers import ContentStyle
 from routers import FollowerLog
@@ -49,6 +50,7 @@ app = FastAPI()
 app.include_router(agency.router)
 app.include_router(utilities.router)
 app.include_router(influencer.router)
+app.include_router(influencer_v2.router)
 app.include_router(AgencyInfluencer.router)
 app.include_router(ContentStyle.router)
 app.include_router(FollowerLog.router)

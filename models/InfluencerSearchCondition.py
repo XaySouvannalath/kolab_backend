@@ -15,3 +15,4 @@ class InfluencerSearchCondition(BaseModel):
     social_platform_id: Optional[List[int]] = None  # Optional list of content style IDs
     number_of_follower: Union[str, None] = None
     
+    
