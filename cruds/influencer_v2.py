@@ -21,7 +21,7 @@ async def search_influencer(conditions: InfluencerSearchCondition):
     d.agency_name, e.description as birth_place_description
     from influencer a 
     inner join content_style b on b.id = a.content_style_id
-    left join province c on c.id = a.province_id
+    left join province c on c.id = a.provnince_id
     left join agency d on d.id = a.agency_id
   
     left join province e on e.id = a.birth_place
@@ -102,11 +102,18 @@ async def search_influencer(conditions: InfluencerSearchCondition):
         
         sa_models = []
         for sa in social_accounts:
+            print(sa)
             sa_model = InfluencerSocialAccount(
                 id=sa["id"],
                 num_of_follower=sa["num_of_follower"],
                 platform_name=sa["platform_name"],
-                logo_image=sa["logo_image"]
+                logo_image=sa["logo_image"],
+                profile_name=sa["profile_name"],
+                profile_url=sa["profile_url"],
+                api_follower_link=sa["api_follower_link"],
+                social_platform_id=sa["id"],
+                meta_id=sa["meta_id"],
+                influencer_id=r["id"]
                 
             )
             sa_models.append(sa_model)
@@ -142,9 +149,15 @@ async def search_influencer(conditions: InfluencerSearchCondition):
                     social_accounts=sa_models,
                     photo2= r['photo2'],
                     photo3= r['photo3'],
+                    # Add the new fields
+                    is_active=r['is_active'],
+                    notable_projects=r['notable_projects'],
+                    # content_style is already included above
+                    notable_skills=r['notable_skills'],
+                    achievements=r['achievements'],
+                    kolab_experienced=r['kolab_experienced']
                 ) 
             )
         
     return influencer_response
-    
-    
+

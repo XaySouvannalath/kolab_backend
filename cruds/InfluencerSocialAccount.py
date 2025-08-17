@@ -9,35 +9,53 @@ from config.database import database
 # CRUD operations
 async def create_influencer_social_account(data: InfluencerSocialAccount):
     query = """
-    INSERT INTO influencer_social_account (influencer_id, social_platform_id, profile_url, profile_name)
-    VALUES (:influencer_id, :social_platform_id, :profile_url, :profile_name)
+    INSERT INTO influencer_social_account (influencer_id, social_platform_id, profile_url, profile_name,average_engagement)
+    VALUES (:influencer_id, :social_platform_id, :profile_url, :profile_name, :average_engagement)
     """
     values = {
         "influencer_id": data.influencer_id,
         "social_platform_id": data.social_platform_id,
         "profile_url": data.profile_url,
-        "profile_name": data.profile_name
+        "profile_name": data.profile_name,
+        "average_engagement": data.average_engagement
 
     }
     await database.execute(query=query, values=values)
 async def update_influencer_social_account(data: InfluencerSocialAccount):
     query = """
-
-    update influencer_social_account set profile_url = :profile_url, profile_name = :profile_name
-    where influencer_id = :influencer_id and social_platform_id = :social_platform_id
+    update 
+        influencer_social_account 
+    set 
+            profile_url = :profile_url, 
+            profile_name = :profile_name, 
+            average_engagement = :average_engagement
+    where 
+        influencer_id = :influencer_id and 
+        social_platform_id = :social_platform_id
     """
     values = {
         "influencer_id": data.influencer_id,
         "social_platform_id": data.social_platform_id,
         "profile_url": data.profile_url,
-        "profile_name": data.profile_name
+        "profile_name": data.profile_name,
+        "average_engagement": data.average_engagement
 
     }
+    print(values)
     await database.execute(query=query, values=values)
 
 async def get_influencer_social_account(account_id: int):
     query = """
-    SELECT id, influencer_id, social_platform_id, profile_url, profile_name, created_date, created_by, last_modified_date
+    SELECT 
+        id, 
+        influencer_id, 
+        social_platform_id, 
+        profile_url, 
+        profile_name, 
+        created_date, 
+        created_by, 
+        last_modified_date,
+        average_engagement
     FROM influencer_social_account
     WHERE id = :id
     """
@@ -48,7 +66,16 @@ async def get_influencer_social_account(account_id: int):
     
 async def get_all_influencer_social_accounts():
     query = """
-    SELECT id, influencer_id, social_platform_id, profile_url, profile_name, created_date, created_by, last_modified_date
+    SELECT 
+        id, 
+        influencer_id, 
+        social_platform_id, 
+        profile_url, 
+        profile_name, 
+        created_date, 
+        created_by, 
+        last_modified_date,
+        average_engagement
     FROM influencer_social_account
     """
     accounts = await database.fetch_all(query=query)
@@ -66,27 +93,29 @@ async def get_all_influencer_social_accounts():
 #         raise HTTPException(status_code=404, detail="No social accounts found for this influencer")
 #     return accounts
 async def get_social_accounts_by_influencer_id(influencer_id: int):
-    query = """
-        select a.id, a.platform_name, a.logo_image, a.api_follower_link,
-        ifnull((select profile_name from influencer_social_account  where influencer_id = :influencer_id and social_platform_id = a.id order by id desc limit 1),"") as profile_name,
-        ifnull((select profile_url from influencer_social_account  where influencer_id = :influencer_id and social_platform_id = a.id order by id desc limit 1),"") as profile_url,
+    print(f"get_social_accounts_by_influencer_id - Fetching accounts for influencer_id: {influencer_id}")
+    query = f"""
+        
+        select a.id, a.platform_name, a.logo_image, a.api_follower_link, web_url, platform_color,
+        ifnull((select influencer_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"")  as influencer_id, 
+        ifnull((select social_platform_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"")  as social_platform_id, 
+                
+        ifnull((select profile_name from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"") as profile_name,
+        ifnull((select profile_url from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"") as profile_url,
 
-        ifnull((select id from influencer_social_account where influencer_id = :influencer_id and social_platform_id = a.id order by id desc limit 1),0) as meta_id,
-        ifnull((select num_of_follower from follower_logs where influencer_id  = :influencer_id and platform_id = a.id order by id desc limit 1),0) as num_of_follower
+        ifnull((select id from influencer_social_account where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),0) as meta_id,
+        ifnull((select num_of_follower from follower_logs where influencer_id  = {influencer_id} and platform_id = a.id order by id desc limit 1),0) as num_of_follower,
+        ifnull((select average_engagement from influencer_social_account where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),0) as average_engagement
+
         from social_platform a;
-
     """
+   
     
-    value = {
-        "influencer_id": influencer_id,
-        "influencer_id": influencer_id,
-        "influencer_id": influencer_id,
-        "influencer_id": influencer_id,
-    }
+    result = await database.fetch_all(query=query)
     
-    print(query)
-    result = await database.fetch_all(query=query, values=value)
+    # # Print result values
+    # print(f"Query returned {len(result) if result else 0} records")
+    # for row in result:
+    #     print(dict(row))
     
-    
- 
     return result

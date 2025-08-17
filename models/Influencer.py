@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 from pydantic import BaseModel
 from datetime import datetime, date
 from models.InfluencerSocialAccount import InfluencerSocialAccount
@@ -24,7 +24,7 @@ class Influencer(BaseModel):
     photo: Union[str, None] = None
     province_id: Union[int, None] = None
     province_description: Union[str, None] = None
-    tags: List[InfluencerTagModel] = None
+    #tags: Optional[List[InfluencerTagModel]] = None
     agency_name: Union[str, None] = None
     birth_place: Union[int, None] = None
     birth_place_description: Union[str, None] = None
@@ -34,4 +34,9 @@ class Influencer(BaseModel):
     social_accounts: List[InfluencerSocialAccount] = None
     photo2: Union[str, None] = None
     photo3: Union[str, None] = None
-    
+    is_active: Union[int, None] = None
+    notable_projects: Union[str, None] = None
+    notable_skills: Union[str, None] = None
+    achievements: Union[str, None] = None
+    kolab_experienced: Union[int, None] = None
+

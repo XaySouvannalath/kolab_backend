@@ -31,15 +31,16 @@ async def get_by_influencer(influencer_id: int):
         # print(r["influencer_id"])
         response.append(InfluencerSocialAccount(
             id=r["id"],
-            # influencer_id=r["influencer_id"],
-            # social_platform_id=r["social_platform_id"],
+            influencer_id=r["influencer_id"],
+            social_platform_id=r["social_platform_id"],
             profile_url=r["profile_url"],
             profile_name=r["profile_name"],
             logo_image=r["logo_image"],
             meta_id=r["meta_id"],
             api_follower_link=r["api_follower_link"],
             num_of_follower=r["num_of_follower"],
-            platform_name=r["platform_name"]
+            platform_name=r["platform_name"],
+            average_engagement=str(r["average_engagement"])
         ))
         
     #    id,

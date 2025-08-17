@@ -33,7 +33,7 @@ async def login(form_data: LoginModel):
             }
         )
     
-    access_token_expires = timedelta(minutes=30)
+    access_token_expires = timedelta(weeks=1)  # Token will expire in 1 week
     access_token = create_access_token(
         data={"sub": user.username, "id": user.id}, expires_delta=access_token_expires
     )

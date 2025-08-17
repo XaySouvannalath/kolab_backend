@@ -41,11 +41,22 @@ async def create(influencer: Influencer):
     await create_influencer(influencer)
     return influencer
 
-@router.put("/{influencer_id}", response_model=Influencer, tags=["influencer"])
+@router.put("/{influencer_id}",  tags=["influencer"])
 async def update(influencer_id: int, influencer: Influencer):
+    
+    print("UPDATE INFLUENCER")
     existing_influencer = await get_influencer(influencer_id)
     if existing_influencer is None:
         raise HTTPException(status_code=404, detail="Influencer not found")
+
+    #update influ
+
+    #update social account
+    social_accounts = influencer.social_accounts
+    for social_account in social_accounts:
+        print("AVERAGE_ENGAGEMENT ", social_account.average_engagement)
+        await update_influencer_social_account(social_account)
+
     await update_influencer(influencer_id, influencer)
     return influencer
 

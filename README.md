@@ -1,5 +1,6 @@
 # 1. How to run the project in dev mode:
->uvicorn main:app --reload
+
+uvicorn main:app --reload
 
 # 2. How to run the project in real server
  >myenv/bin/fastapi run main.py

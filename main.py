@@ -111,53 +111,53 @@ async def root():
 
 # Create a Bearer scheme instance
 # security = HTTPBearer()
-@app.middleware("http")
-async def check_token_middleware(request: Request, call_next):
-    # print("calling api")
-    # Get the Authorization header
-    # print(request.headers)
-    authorization = request.headers.get("Authorization")
-    test = request.headers.get("saiyavong")
-    # print(authorization)
-    # print(test)
-    response = await call_next(request)
-    # return response
+# @app.middleware("http")
+# async def check_token_middleware(request: Request, call_next):
+#     # print("calling api")
+#     # Get the Authorization header
+#     # print(request.headers)
+#     authorization = request.headers.get("Authorization")
+#     test = request.headers.get("saiyavong")
+#     # print(authorization)
+#     # print(test)
+#     response = await call_next(request)
+#     # return response
 
-    req_path = request.url.path
-    if req_path == '/login' or req_path == '/docs' or req_path == '/openapi.json' or req_path == '/files':
-         return response
-        #  return response
-    else:
-        # If no authorization header is found, raise an exception
-        if authorization is None:
-            return JSONResponse(status_code=401, content={
-                "success": False,
-                "detail": "Authorization header missing"})
-        else:
-            token = authorization.split(" ")[1] if " " in authorization else None
-            # print(token)
-            # return response
-            if token is None:
-                return JSONResponse(status_code=401, content={
-                    "detail": "Invalid Authorization header format"})
-            else:
-                try:
-                #     # Verify the token
-                    payload = verify_token(token)
-                    # You can add the payload (e.g., user info) to the request state if needed
-                    # print("Payload")
-                    # print(payload)
-                    request.state.user = payload
+#     req_path = request.url.path
+#     if req_path == '/login' or req_path == '/docs' or req_path == '/openapi.json' or req_path == '/files':
+#          return response
+#         #  return response
+#     else:
+#         # If no authorization header is found, raise an exception
+#         if authorization is None:
+#             return JSONResponse(status_code=401, content={
+#                 "success": False,
+#                 "detail": "Authorization header missing"})
+#         else:
+#             token = authorization.split(" ")[1] if " " in authorization else None
+#             # print(token)
+#             # return response
+#             if token is None:
+#                 return JSONResponse(status_code=401, content={
+#                     "detail": "Invalid Authorization header format"})
+#             else:
+#                 try:
+#                 #     # Verify the token
+#                     payload = verify_token(token)
+#                     # You can add the payload (e.g., user info) to the request state if needed
+#                     # print("Payload")
+#                     # print(payload)
+#                     request.state.user = payload
                    
-                    # return response
-                    if payload == False:
-                        return JSONResponse(status_code=401, content={"success": False,"message": "Token has expired"})
-                    else:
+#                     # return response
+#                     if payload == False:
+#                         return JSONResponse(status_code=401, content={"success": False,"message": "Token has expired"})
+#                     else:
                       
-                        return response
-                except Exception as e:
-                    print(f"Token verification failed: {str(e)}")
-                    return JSONResponse(status_code=401, content={"success": False,"message": "Token has expired"})
+#                         return response
+#                 except Exception as e:
+#                     print(f"Token verification failed: {str(e)}")
+#                     return JSONResponse(status_code=401, content={"success": False,"message": "Token has expired"})
 
     
 

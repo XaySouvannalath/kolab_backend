@@ -19,5 +19,8 @@ class InfluencerSocialAccount(BaseModel):
     # extra
     platform_name: Union[str, None] = None
     logo_image: Union[str,None] = None
+    web_url: Union[str, None] = None
+    platform_color: Union[str, None] = None
+    average_engagement: Union[str,None] = None
 
 

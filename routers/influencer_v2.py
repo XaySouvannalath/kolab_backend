@@ -1,5 +1,8 @@
 from typing import Union
 from fastapi import APIRouter, HTTPException
+
+from cruds.influencer import get_influencer, get_all_influencers, create_influencer, update_influencer, \
+    delete_influencer
 from models.Influencer import Influencer
 from cruds.influencer_v2 import *
 from models.InfluencerSearchCondition import InfluencerSearchCondition
@@ -40,8 +43,6 @@ async def search(conditions: InfluencerSearchCondition):
             raise HTTPException(status_code=404, detail="Influencers not found")
     return result
 
-    
-
 @router.post("/", tags=["influencer"])
 async def create(influencer: Influencer):
     await create_influencer(influencer)
@@ -49,10 +50,16 @@ async def create(influencer: Influencer):
 
 @router.put("/{influencer_id}", response_model=Influencer, tags=["influencer"])
 async def update(influencer_id: int, influencer: Influencer):
+
+    print("UPDATE INFLUENCER")
     existing_influencer = await get_influencer(influencer_id)
     if existing_influencer is None:
         raise HTTPException(status_code=404, detail="Influencer not found")
     await update_influencer(influencer_id, influencer)
+
+    # update socialAccount
+
+
     return influencer
 
 @router.delete("/{influencer_id}", response_model=Influencer, tags=["influencer"])
