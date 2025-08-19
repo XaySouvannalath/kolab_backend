@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from datetime import datetime, date
 from models.InfluencerSocialAccount import InfluencerSocialAccount
 from models.InfluencerTagResponse import InfluencerTagModel
+from models.Achievement import InfluencerAchievement
 
 class Influencer(BaseModel):
     id: Union[int, None] = None
@@ -14,7 +15,7 @@ class Influencer(BaseModel):
     last_name: Union[str, None] = None
     nick_name: Union[str, None] = None
     remark: Union[str, None] = None
-    date_of_birth: Union[date, None] = None
+    date_of_birth: Union[str, None] = None
     has_agency: Union[bool, None] = None
     created_date: Union[datetime, None] = None
     created_by: Union[str, None] = None
@@ -37,6 +38,6 @@ class Influencer(BaseModel):
     is_active: Union[int, None] = None
     notable_projects: Union[str, None] = None
     notable_skills: Union[str, None] = None
-    achievements: Union[str, None] = None
+    achievements: List[InfluencerAchievement] = None
     kolab_experienced: Union[int, None] = None
 

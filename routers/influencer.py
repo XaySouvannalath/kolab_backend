@@ -4,8 +4,8 @@ from models.Influencer import Influencer
 from cruds.influencer import *
 from models.InfluencerSearchCondition import InfluencerSearchCondition
 from fastapi import Depends
-
-
+from cruds.AchievementService import *
+from utilities.DateManipulation import lao_date_to_iso
 
 router = APIRouter(
     prefix="/influencer"
@@ -45,6 +45,8 @@ async def create(influencer: Influencer):
 async def update(influencer_id: int, influencer: Influencer):
     
     print("UPDATE INFLUENCER")
+
+    influencer.date_of_birth = lao_date_to_iso(influencer.date_of_birth)
     existing_influencer = await get_influencer(influencer_id)
     if existing_influencer is None:
         raise HTTPException(status_code=404, detail="Influencer not found")
@@ -56,6 +58,13 @@ async def update(influencer_id: int, influencer: Influencer):
     for social_account in social_accounts:
         print("AVERAGE_ENGAGEMENT ", social_account.average_engagement)
         await update_influencer_social_account(social_account)
+
+
+    #update achievement
+    achievements = influencer.achievements
+    for achievement in achievements:
+        if achievement.id is None:
+            await create_achievement(achievement)
 
     await update_influencer(influencer_id, influencer)
     return influencer

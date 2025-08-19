@@ -10,8 +10,9 @@ from fastapi.responses import JSONResponse
 from cruds.Auth import verify_token
 from fastapi.security import HTTPBearer
 
-from fastapi.middleware.cors import CORSMiddleware 
+from fastapi.middleware.cors import CORSMiddleware
 
+from models import Achievement
 # from starlette.middleware.cors import CORSMiddleware
 
 
@@ -44,6 +45,7 @@ from routers import FileUpload
 from routers import InfluencerRating
 from routers import InfluencerSocialAccount
 from routers import Auth
+from routers import AchievementController
 
 app = FastAPI()
 
@@ -75,6 +77,7 @@ app.include_router(FileUpload.router)
 app.include_router(InfluencerRating.router)
 app.include_router(InfluencerSocialAccount.router)
 app.include_router(Auth.router)
+app.include_router(AchievementController.router)
 
 origins = [
     "http://localhost:5173"

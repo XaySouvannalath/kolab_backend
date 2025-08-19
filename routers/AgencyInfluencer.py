@@ -1,7 +1,7 @@
 from typing import Union
 from fastapi import APIRouter, HTTPException
 from models.AgencyInfluencer import AgencyInfluencer
-from cruds.AgencyInfluencer import *
+from cruds.AgencyInfluencerService import *
 
 router = APIRouter(
     prefix="/agency_influencer"

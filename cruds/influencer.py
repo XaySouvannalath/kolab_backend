@@ -6,6 +6,8 @@ from cruds.InfluencerTag import get_influencer_tags_v3
 from cruds.InfluencerSocialAccount import *
 from models.InfluencerSocialAccount import InfluencerSocialAccount
 from models.InfluencerTagResponse import InfluencerTagModel
+from cruds.AchievementService import  *
+from utilities.DateManipulation import iso_to_lao_date
 
 
 async def get_all_influencers():
@@ -33,11 +35,11 @@ async def create_influencer(influencer: Influencer):
     INSERT INTO influencer (channel_name, content_style_id, is_available, first_name, last_name, nick_name, remark, 
                             date_of_birth, has_agency, created_by, gender, agency_id, photo, province_id,
                             birth_place, impression, reach, engagement, photo2, photo3,
-                            is_active, notable_projects, content_style, notable_skills, achievements, kolab_experienced)
+                            is_active, notable_projects, content_style, notable_skills, kolab_experienced)
     VALUES (:channel_name, :content_style_id, :is_available, :first_name, :last_name, :nick_name, :remark, 
             :date_of_birth, :has_agency, :created_by, :gender, :agency_id, :photo, :province_id,
             :birth_place, :impression, :reach, :engagement, :photo2, :photo3,
-            :is_active, :notable_projects, :content_style, :notable_skills, :achievements, :kolab_experienced)
+            :is_active, :notable_projects, :content_style, :notable_skills, :kolab_experienced)
     """
     values = {
         "channel_name": influencer.channel_name,
@@ -64,12 +66,13 @@ async def create_influencer(influencer: Influencer):
         "notable_projects": influencer.notable_projects,
         "content_style": influencer.content_style,
         "notable_skills": influencer.notable_skills,
-        "achievements": influencer.achievements,
         "kolab_experienced": influencer.kolab_experienced
     }
     await database.execute(query=query, values=values)
 
 async def update_influencer(influencer_id: int, influencer: Influencer):
+
+    print(influencer.date_of_birth)
     query = """
     UPDATE influencer
     SET channel_name = :channel_name, content_style_id = :content_style_id, is_available = :is_available, 
@@ -79,7 +82,7 @@ async def update_influencer(influencer_id: int, influencer: Influencer):
         impression = :impression, reach = :reach, engagement = :engagement,
         photo2 = :photo2, photo3 = :photo3,
         is_active = :is_active, notable_projects = :notable_projects, content_style = :content_style,
-        notable_skills = :notable_skills, achievements = :achievements, kolab_experienced = :kolab_experienced
+        notable_skills = :notable_skills, kolab_experienced = :kolab_experienced
     WHERE id = :id
     """
     values = {
@@ -106,7 +109,7 @@ async def update_influencer(influencer_id: int, influencer: Influencer):
         "notable_projects": influencer.notable_projects,
         "content_style": influencer.content_style,
         "notable_skills": influencer.notable_skills,
-        "achievements": influencer.achievements,
+
         "kolab_experienced": influencer.kolab_experienced,
         "id": influencer_id
     }
@@ -199,7 +202,7 @@ async def search_influencer(conditions: InfluencerSearchCondition):
          )
         """
     
-    # print(query)
+    print(query)
     result = await database.fetch_all(query=query)
     
     influencer_response = []
@@ -217,10 +220,8 @@ async def search_influencer(conditions: InfluencerSearchCondition):
         
         
         social_accounts = await get_social_accounts_by_influencer_id(influencer_id=r["id"])
-        
         sa_models = []
         for sa in social_accounts:
-
             print("INFLUENCER ID: ", sa["influencer_id"])
             sa_model = InfluencerSocialAccount(
                 id=sa["id"],
@@ -239,7 +240,19 @@ async def search_influencer(conditions: InfluencerSearchCondition):
 
             )
             sa_models.append(sa_model)
-            
+
+
+        achievements = await get_achievement_by_influencer_id(influencer_id=r["id"])
+        achievement_models = []
+        for ach in achievements:
+            print("INFLUENCER ID: ", ach["influencer_id"])
+            achievement_model = InfluencerAchievement(
+                id=ach["id"],
+                influencer_id=ach["influencer_id"],
+                achievement_text=ach["achievement_text"]
+            )
+            achievement_models.append(achievement_model)
+
         influencer_response.append(
             Influencer(
                     id=r["id"],
@@ -251,7 +264,7 @@ async def search_influencer(conditions: InfluencerSearchCondition):
                     last_name=r["last_name"],
                     nick_name=r["nick_name"],
                     remark=r["remark"],
-                    date_of_birth=r["date_of_birth"],
+                    date_of_birth=iso_to_lao_date(r["date_of_birth"]),
                     has_agency=r["has_agency"],
                     created_date=r["created_date"],
                     created_by=r["created_by"],
@@ -275,8 +288,9 @@ async def search_influencer(conditions: InfluencerSearchCondition):
                     notable_projects=r['notable_projects'],
                     content_style=r['content_style'],
                     notable_skills=r['notable_skills'],
-                    achievements=r['achievements'],
+                    achievements=achievement_models,
                     kolab_experienced=r['kolab_experienced']
+
                 ) 
             )
         
