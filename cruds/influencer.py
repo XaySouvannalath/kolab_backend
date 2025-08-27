@@ -70,6 +70,17 @@ async def create_influencer(influencer: Influencer):
     }
     await database.execute(query=query, values=values)
 
+async def update_influencer_photo(influencer_id: int, photo: str):
+    query = "UPDATE influencer SET photo = :photo WHERE id = :id"
+    await database.execute(query=query, values={"photo": photo, "id": influencer_id})
+
+async def update_influencer_photo2(influencer_id: int, photo2: str):
+    query = "UPDATE influencer SET photo2 = :photo2 WHERE id = :id"
+    await database.execute(query=query, values={"photo2": photo2, "id": influencer_id})
+
+async def update_influencer_photo3(influencer_id: int, photo3: str):
+    query = "UPDATE influencer SET photo3 = :photo3 WHERE id = :id"
+    await database.execute(query=query, values={"photo3": photo3, "id": influencer_id})
 async def update_influencer(influencer_id: int, influencer: Influencer):
 
     print(influencer.date_of_birth)
@@ -140,7 +151,7 @@ async def search_influencer(conditions: InfluencerSearchCondition):
     print(conditions)
    # Append conditions if they are not None
     if conditions.id is not None:
-        query += f" AND a.id = {conditions.id}"
+        query += f" AND a.id = {int(conditions.id)}"
     # if conditions.channel_name:
     #     query += f" AND a.channel_name LIKE '%{conditions.channel_name}%'"
     # if conditions.first_name:
@@ -158,8 +169,8 @@ async def search_influencer(conditions: InfluencerSearchCondition):
         keyword = f"%{conditions.keyword}%"  # Wildcard search
         query += f"""
         AND (
-            a.id = '{conditions.keyword}'
-            OR a.channel_name LIKE '{keyword}'
+           
+            a.channel_name LIKE '{keyword}'
             OR a.first_name LIKE '{keyword}'
             OR a.last_name LIKE '{keyword}'
         )
@@ -218,20 +229,20 @@ async def search_influencer(conditions: InfluencerSearchCondition):
             )
             tag_models.append(influencer_tag_model)
         
-        
+
+
         social_accounts = await get_social_accounts_by_influencer_id(influencer_id=r["id"])
         sa_models = []
         for sa in social_accounts:
-            print("INFLUENCER ID: ", sa["influencer_id"])
             sa_model = InfluencerSocialAccount(
-                id=sa["id"],
+                id=int(sa["id"]),
                 num_of_follower=sa["num_of_follower"],
                 platform_name=sa["platform_name"],
                 logo_image=sa["logo_image"],
                 profile_name=sa["profile_name"],
                 profile_url=sa["profile_url"],
                 api_follower_link=sa["api_follower_link"],
-                social_platform_id=sa["social_platform_id"],
+                social_platform_id= sa["social_platform_id"], # can't accept null
                 meta_id=sa["meta_id"],
                 influencer_id=sa["influencer_id"],
                 web_url=sa["web_url"],

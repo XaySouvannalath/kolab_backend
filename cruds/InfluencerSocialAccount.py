@@ -97,8 +97,9 @@ async def get_social_accounts_by_influencer_id(influencer_id: int):
     query = f"""
         
         select a.id, a.platform_name, a.logo_image, a.api_follower_link, web_url, platform_color,
-        ifnull((select influencer_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"")  as influencer_id, 
-        ifnull((select social_platform_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"")  as social_platform_id, 
+        ifnull((select influencer_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),0)  as influencer_id, 
+        ifnull((select social_platform_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),0)  as social_platform_id, 
+        ifnull((select social_platform_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),0)  as social_platform_id, 
                 
         ifnull((select profile_name from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"") as profile_name,
         ifnull((select profile_url from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"") as profile_url,

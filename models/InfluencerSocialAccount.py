@@ -1,12 +1,12 @@
-from typing import Union
+from typing import Union, Optional
 from pydantic import BaseModel
 from datetime import datetime
 
 # Pydantic model for request and response
 class InfluencerSocialAccount(BaseModel):
     id: int
-    influencer_id: Union[int, None] = None
-    social_platform_id: Union[int, None] = None
+    influencer_id: Optional[int] = None
+    social_platform_id: Optional[int] = None
     profile_url: Union[str, None] = None
     profile_name: Union[str, None] = None
     created_date: Union[datetime, None] = None

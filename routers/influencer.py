@@ -5,6 +5,9 @@ from cruds.influencer import *
 from models.InfluencerSearchCondition import InfluencerSearchCondition
 from fastapi import Depends
 from cruds.AchievementService import *
+from models.UpdatePhoto2ReqBody import UpdatePhoto2RequestBody
+from models.UpdatePhoto3ReqBody import  UpdatePhoto3RequestBody
+from models.UpdatePhotoReqBody import UpdatePhotoRequestBody
 from utilities.DateManipulation import lao_date_to_iso
 
 router = APIRouter(
@@ -76,3 +79,19 @@ async def delete(influencer_id: int):
         raise HTTPException(status_code=404, detail="Influencer not found")
     await delete_influencer(influencer_id)
     return existing_influencer
+
+@router.post("/update_influencer_photo", tags=["influencer"])
+async def updateInfluencerPhoto(updatePhoto: UpdatePhotoRequestBody):
+    await update_influencer_photo(updatePhoto.influencer_id, updatePhoto.photo)
+    return updatePhoto
+
+@router.post("/update_influencer_photo2", tags=["influencer"])
+async def updateInfluencerPhoto(updatePhoto: UpdatePhoto2RequestBody):
+    await update_influencer_photo2(updatePhoto.influencer_id, updatePhoto.photo2)
+    return updatePhoto
+
+@router.post("/influencer/update_influencer_photo3", tags=["influencer"])
+async def updateInfluencerPhoto(updatePhoto: UpdatePhoto3RequestBody):
+    await update_influencer_photo3(updatePhoto.influencer_id, updatePhoto.photo3)
+    return updatePhoto
+
