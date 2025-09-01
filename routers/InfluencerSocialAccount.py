@@ -20,6 +20,11 @@ async def create_account(data: InfluencerSocialAccount):
 async def get_all_accounts():
     return await get_all_influencer_social_accounts()
 
+@router.get("/get_for_insert", tags=["Influencer Social Account"])
+async def get_for_insert():
+    return await get_social_accounts_for_insert()
+
+
 @router.get("/by_influencer_id", tags=["Influencer Social Account"])
 async def get_by_influencer(influencer_id: int):
     response = []

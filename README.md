@@ -24,6 +24,8 @@ or
 
 # get all installed packages list
 >python3 -m  pipreqs.pipreqs . --force
+this way is better
+> pip freeze > requirements.txt
 
 # Install packages from requirements.txt file
 >myenv/bin/pip install -r requirements.txt

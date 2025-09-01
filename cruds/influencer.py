@@ -17,7 +17,7 @@ async def get_all_influencers():
     d.agency_name as agency_name, e.description as birth_place_description
     
     from influencer a 
-    inner join content_style b on b.id = a.content_style_id
+    left join content_style b on b.id = a.content_style_id
     left join province c on c.id = a.province_id
     left join agency d on d.id = a.agency_id
     
@@ -68,7 +68,10 @@ async def create_influencer(influencer: Influencer):
         "notable_skills": influencer.notable_skills,
         "kolab_experienced": influencer.kolab_experienced
     }
-    await database.execute(query=query, values=values)
+    new_id = await database.execute(query=query, values=values)
+    print("-------new id-------")
+    print(new_id)
+    return new_id
 
 async def update_influencer_photo(influencer_id: int, photo: str):
     query = "UPDATE influencer SET photo = :photo WHERE id = :id"
@@ -140,7 +143,6 @@ async def search_influencer(conditions: InfluencerSearchCondition):
     select a.* , c.name as province_name, c.description as province_description,
     d.agency_name, e.description as birth_place_description
     from influencer a 
-    inner join content_style b on b.id = a.content_style_id
     left join province c on c.id = a.province_id
     left join agency d on d.id = a.agency_id
   
@@ -181,10 +183,6 @@ async def search_influencer(conditions: InfluencerSearchCondition):
         province_ids = ','.join(map(str, conditions.province_id))
         query += f" AND a.province_id IN ({province_ids})"
 
-    # Filter by content_style_id if a list is provided
-    if conditions.content_style_id:
-        content_style_ids = ','.join(map(str, conditions.content_style_id))
-        query += f" AND a.content_style_id IN ({content_style_ids})"
     
     # Filter by tag_id if a list is provided
     if conditions.tag_id:
@@ -213,7 +211,7 @@ async def search_influencer(conditions: InfluencerSearchCondition):
          )
         """
     
-    print(query)
+    # print(query)
     result = await database.fetch_all(query=query)
     
     influencer_response = []

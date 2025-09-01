@@ -41,7 +41,22 @@ async def search(conditions: InfluencerSearchCondition):
 
 @router.post("/", tags=["influencer"])
 async def create(influencer: Influencer):
-    await create_influencer(influencer)
+    # save influencer
+    influencer.date_of_birth = lao_date_to_iso(influencer.date_of_birth)
+    new_id = await create_influencer(influencer)
+
+    # save social account
+    social_accounts = influencer.social_accounts
+    for social_account in social_accounts:
+        social_account.influencer_id = new_id
+        await create_influencer_social_account(social_account)
+
+
+    #insert achievement
+    achievements = influencer.achievements
+    for achievement in achievements:
+        if achievement.id is None:
+            await create_achievement(achievement)
     return influencer
 
 @router.put("/{influencer_id}",  tags=["influencer"])

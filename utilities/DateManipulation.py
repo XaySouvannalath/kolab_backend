@@ -7,6 +7,8 @@ def lao_date_to_iso(lao_date):
 
 
 def iso_to_lao_date(iso_date):
-    formatted_date = datetime.strptime(str(iso_date), "%Y-%m-%d").strftime("%d-%m-%Y")
+    if not iso_date:  # handles None or ''
+        iso_date = datetime.today().strftime("%Y-%m-%d")
 
+    formatted_date = datetime.strptime(str(iso_date), "%Y-%m-%d").strftime("%d-%m-%Y")
     return formatted_date
