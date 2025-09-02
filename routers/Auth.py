@@ -5,7 +5,9 @@ from cruds.Auth import *
 from typing import Union
 from fastapi.responses import JSONResponse
 
+from cruds.RoleMenu import get_role_menu_by_role_id
 from models.Auth import LoginModel
+from models.RoleMenu import RoleMenu
 from models.User import PasswordReset
 import json
 
@@ -37,7 +39,19 @@ async def login(form_data: LoginModel):
     access_token = create_access_token(
         data={"sub": user.username, "id": user.id}, expires_delta=access_token_expires
     )
-    
+    menus = await get_role_menu_by_role_id(user.user_role_id)
+    menu_json = []
+    menu_model = []
+    for menu in menus:
+        menu_model =  RoleMenu(
+            id = menu["id"],
+            role_id = menu["role_id"],
+            menu_id = menu["menu_id"],
+            menu = menu["menu"],
+            route = menu["route"]
+        )
+        menu_json.append(menu_model)
+
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={
@@ -46,7 +60,8 @@ async def login(form_data: LoginModel):
             "token_type": "bearer",
             "first_name": user.first_name,
             "last_name": user.last_name,
-            "menu": None
+            "menu": [m.__dict__ for m in menu_json],
+            "role_id": user.user_role_id
              
         })
 

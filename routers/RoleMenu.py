@@ -19,6 +19,8 @@ async def get(id: Union[str, None] = None):
             raise HTTPException(status_code=404, detail="No role menus found")
     return result
 
+
+
 @router.post("/", tags=["role_menus"])
 async def create(role_menu: RoleMenu):
     await create_role_menu(role_menu)
