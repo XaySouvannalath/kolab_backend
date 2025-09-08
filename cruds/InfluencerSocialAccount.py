@@ -1,6 +1,9 @@
 from typing import List
 from datetime import datetime
 from fastapi import HTTPException
+
+from cruds.FollowerLog import create_follower_log
+from models.FollowerLog import FollowerLog
 from models.InfluencerSocialAccount import InfluencerSocialAccount
 from config.database import database
 
@@ -9,18 +12,28 @@ from config.database import database
 # CRUD operations
 async def create_influencer_social_account(data: InfluencerSocialAccount):
     query = """
-    INSERT INTO influencer_social_account (influencer_id, social_platform_id, profile_url, profile_name,average_engagement)
-    VALUES (:influencer_id, :social_platform_id, :profile_url, :profile_name, :average_engagement)
+    INSERT INTO influencer_social_account (influencer_id, social_platform_id, profile_url, profile_name,average_engagement, num_of_follower)
+    VALUES (:influencer_id, :social_platform_id, :profile_url, :profile_name, :average_engagement, :num_of_follower)
     """
     values = {
         "influencer_id": data.influencer_id,
         "social_platform_id": data.social_platform_id,
         "profile_url": data.profile_url,
         "profile_name": data.profile_name,
-        "average_engagement": data.average_engagement
+        "average_engagement": data.average_engagement,
+        "num_of_follower": data.num_of_follower
     }
     print(values)
     await database.execute(query=query, values=values)
+
+    # save follower logs
+    await create_follower_log(
+        FollowerLog(
+            influencer_id=data.influencer_id,
+            platform_id=data.social_platform_id,
+            num_of_follower=data.num_of_follower
+        )
+    )
 async def update_influencer_social_account(data: InfluencerSocialAccount):
     query = """
     update 
@@ -29,6 +42,7 @@ async def update_influencer_social_account(data: InfluencerSocialAccount):
             profile_url = :profile_url, 
             profile_name = :profile_name, 
             average_engagement = :average_engagement
+           
     where 
         influencer_id = :influencer_id and 
         social_platform_id = :social_platform_id
@@ -40,9 +54,16 @@ async def update_influencer_social_account(data: InfluencerSocialAccount):
         "profile_name": data.profile_name,
         "average_engagement": data.average_engagement
 
+
     }
-    print(values)
     await database.execute(query=query, values=values)
+    await create_follower_log(
+        FollowerLog(
+            influencer_id=data.influencer_id,
+            platform_id=data.social_platform_id,
+            num_of_follower=data.num_of_follower
+        )
+    )
 
 async def get_influencer_social_account(account_id: int):
     query = """
@@ -97,8 +118,8 @@ async def get_social_accounts_by_influencer_id(influencer_id: int):
     query = f"""
         
         select a.id, a.platform_name, a.logo_image, a.api_follower_link, web_url, platform_color,
-        ifnull((select influencer_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),0)  as influencer_id, 
-        ifnull((select social_platform_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),0)  as social_platform_id, 
+        ifnull((select influencer_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),{influencer_id})  as influencer_id, 
+        ifnull((select social_platform_id from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),a.id)  as social_platform_id, 
                 
         ifnull((select profile_name from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"") as profile_name,
         ifnull((select profile_url from influencer_social_account  where influencer_id = {influencer_id} and social_platform_id = a.id order by id desc limit 1),"") as profile_url,

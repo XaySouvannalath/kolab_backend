@@ -74,8 +74,10 @@ async def update(influencer_id: int, influencer: Influencer):
     #update social account
     social_accounts = influencer.social_accounts
     for social_account in social_accounts:
-        print("AVERAGE_ENGAGEMENT ", social_account.average_engagement)
-        await update_influencer_social_account(social_account)
+        if social_account.meta_id  == 0:
+            await create_influencer_social_account(social_account)
+        else:
+            await update_influencer_social_account(social_account)
 
 
     #update achievement
