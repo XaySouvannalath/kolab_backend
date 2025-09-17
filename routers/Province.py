@@ -32,6 +32,11 @@ async def update(province_id: int, province: Province):
     await update_province(province_id, province)
     return province
 
+@router.get("/by_country", tags=["provinces"])
+async def get_by_country(country_id: int):
+    result = await get_province_by_country_id(int(country_id))
+    return result
+
 @router.delete("/{province_id}", response_model=Province, tags=["provinces"])
 async def delete(province_id: int):
     existing_province = await get_province(province_id)

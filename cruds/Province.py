@@ -10,6 +10,10 @@ async def get_province(province_id: int):
     query = "SELECT * FROM province WHERE id = :id"
     return await database.fetch_one(query=query, values={"id": province_id})
 
+async def get_province_by_country_id(country_id: int):
+    query = "SELECT * FROM province WHERE country_id = :country_id"
+    return await database.fetch_all(query=query, values={"country_id": country_id})
+
 async def create_province(province: Province):
     query = """
     INSERT INTO province (name, description)

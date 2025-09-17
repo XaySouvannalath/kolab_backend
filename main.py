@@ -46,6 +46,7 @@ from routers import InfluencerRating
 from routers import InfluencerSocialAccount
 from routers import Auth
 from routers import AchievementController
+from routers import Country
 
 app = FastAPI()
 
@@ -78,6 +79,7 @@ app.include_router(InfluencerRating.router)
 app.include_router(InfluencerSocialAccount.router)
 app.include_router(Auth.router)
 app.include_router(AchievementController.router)
+app.include_router(Country.router)
 
 origins = [
     "http://localhost:5173"
