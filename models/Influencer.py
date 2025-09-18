@@ -40,4 +40,5 @@ class Influencer(BaseModel):
     notable_skills: Union[str, None] = None
     achievements: List[InfluencerAchievement] = None
     kolab_experienced: Union[int, None] = None
+    country_id: Union[int, None] = None
 

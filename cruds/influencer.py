@@ -35,11 +35,12 @@ async def create_influencer(influencer: Influencer):
     INSERT INTO influencer (channel_name, content_style_id, is_available, first_name, last_name, nick_name, remark, 
                             date_of_birth, has_agency, created_by, gender, agency_id, photo, province_id,
                             birth_place, impression, reach, engagement, photo2, photo3,
-                            is_active, notable_projects, content_style, notable_skills, kolab_experienced)
+                            is_active, notable_projects, content_style, notable_skills, kolab_experienced,
+    country_id)
     VALUES (:channel_name, :content_style_id, :is_available, :first_name, :last_name, :nick_name, :remark, 
             :date_of_birth, :has_agency, :created_by, :gender, :agency_id, :photo, :province_id,
             :birth_place, :impression, :reach, :engagement, :photo2, :photo3,
-            :is_active, :notable_projects, :content_style, :notable_skills, :kolab_experienced)
+            :is_active, :notable_projects, :content_style, :notable_skills, :kolab_experienced, :country_id))
     """
     values = {
         "channel_name": influencer.channel_name,
@@ -66,7 +67,8 @@ async def create_influencer(influencer: Influencer):
         "notable_projects": influencer.notable_projects,
         "content_style": influencer.content_style,
         "notable_skills": influencer.notable_skills,
-        "kolab_experienced": influencer.kolab_experienced
+        "kolab_experienced": influencer.kolab_experienced,
+        "country_id": influencer.country_id,
     }
     new_id = await database.execute(query=query, values=values)
     print("-------new id-------")
@@ -96,7 +98,7 @@ async def update_influencer(influencer_id: int, influencer: Influencer):
         impression = :impression, reach = :reach, engagement = :engagement,
         photo2 = :photo2, photo3 = :photo3,
         is_active = :is_active, notable_projects = :notable_projects, content_style = :content_style,
-        notable_skills = :notable_skills, kolab_experienced = :kolab_experienced
+        notable_skills = :notable_skills, kolab_experienced = :kolab_experienced, country_id = :country_id
     WHERE id = :id
     """
     values = {
@@ -125,6 +127,7 @@ async def update_influencer(influencer_id: int, influencer: Influencer):
         "notable_skills": influencer.notable_skills,
 
         "kolab_experienced": influencer.kolab_experienced,
+        "country_id": influencer.country_id,
         "id": influencer_id
     }
     await database.execute(query=query, values=values)
@@ -298,7 +301,8 @@ async def search_influencer(conditions: InfluencerSearchCondition):
                     content_style=r['content_style'],
                     notable_skills=r['notable_skills'],
                     achievements=achievement_models,
-                    kolab_experienced=r['kolab_experienced']
+                    kolab_experienced=r['kolab_experienced'],
+                    country_id=r['country_id']
 
                 ) 
             )
