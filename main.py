@@ -109,7 +109,7 @@ async def shutdown():
 @app.get("/")
 async def root():
     return {
-        "message": "Hello World"
+        "message": "Hello World KOLAB"
         }
     
 
